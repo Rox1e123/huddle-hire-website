@@ -1,0 +1,12 @@
+{
+  "name": "Huddle Hire",
+  "short_name": "Huddle Hire",
+  "icons": [
+    { "src": "assets/logo/png/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "assets/logo/png/apple-touch-icon-180.png", "sizes": "180x180", "type": "image/png" }
+  ],
+  "theme_color": "#6A1020",
+  "background_color": "#FBF5E9",
+  "display": "standalone",
+  "start_url": "/"
+}

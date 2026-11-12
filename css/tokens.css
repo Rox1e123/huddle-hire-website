@@ -1,0 +1,31 @@
+/* Huddle Hire brand tokens (colourway D: maroon + copper gold, light site) */
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&display=swap");
+
+:root {
+  /* Core palette */
+  --hh-maroon: #6A1020;       /* primary brand colour: logo, headings, primary buttons, dark sections */
+  --hh-maroon-deep: #4A0A16;  /* hover/pressed on maroon, footer */
+  --hh-copper: #F2A541;       /* accent: ONLY on maroon or dark backgrounds */
+  --hh-bronze: #A1600B;       /* accent on light backgrounds: logo right half, small highlights, links on hover */
+  --hh-ivory: #FBF5E9;        /* main website background */
+  --hh-white: #FFFFFF;        /* cards and form fields on ivory */
+
+  /* Text */
+  --hh-text: #2B1D1F;         /* body text on ivory/white (14.9:1) */
+  --hh-text-muted: #5C4A4C;   /* secondary text on ivory/white (7.6:1) */
+  --hh-text-on-dark: #FBF5E9; /* text on maroon (11.3:1) */
+
+  /* UI */
+  --hh-line: #E6DCCB;         /* borders and dividers (decorative only) */
+  --hh-focus: #A1600B;        /* focus ring on light; use copper on dark */
+
+  /* Type */
+  --hh-font: "Montserrat", "Helvetica Neue", Arial, sans-serif;
+  --hh-weight-body: 500;
+  --hh-weight-heading: 700;
+  --hh-weight-logo: 600;
+
+  /* Shape and spacing */
+  --hh-radius: 0px;           /* sharp corners: matches the angular H mark */
+  --hh-container: 1200px;
+}
