@@ -1,0 +1,52 @@
+name: Site health checks
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    # Weekly, Monday 07:00 UTC — catches drift between deploys (DNS, expired
+    # cert, a manual Netlify dashboard change) that a deploy-triggered run alone would miss.
+    - cron: "0 7 * * 1"
+  workflow_dispatch: {}
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait for deploy to go live
+        if: github.event_name == 'push'
+        run: sleep 60
+
+      - name: Key pages return 200
+        run: |
+          set -e
+          for path in / /about.html /services.html /contact.html; do
+            code=$(curl -s -o /dev/null -w "%{http_code}" "https://huddlehire.co.uk$path")
+            echo "$path -> $code"
+            [ "$code" = "200" ] || { echo "::error::$path returned $code"; exit 1; }
+          done
+
+      - name: Internal docs are not publicly served
+        run: |
+          set -e
+          for path in /CLAUDE.md /README.md /docs/PROJECT_HANDOVER.md; do
+            code=$(curl -s -o /dev/null -w "%{http_code}" "https://huddlehire.co.uk$path")
+            echo "$path -> $code"
+            [ "$code" = "404" ] || { echo "::error::$path returned $code, expected 404"; exit 1; }
+          done
+
+      - name: robots.txt and sitemap.xml are reachable
+        run: |
+          set -e
+          for path in /robots.txt /sitemap.xml; do
+            code=$(curl -s -o /dev/null -w "%{http_code}" "https://huddlehire.co.uk$path")
+            echo "$path -> $code"
+            [ "$code" = "200" ] || { echo "::error::$path returned $code"; exit 1; }
+          done
+
+      - name: HTTPS/HSTS header present
+        run: |
+          set -e
+          hsts=$(curl -sI https://huddlehire.co.uk/ | grep -i "strict-transport-security" || true)
+          echo "$hsts"
+          [ -n "$hsts" ] || { echo "::error::HSTS header missing"; exit 1; }

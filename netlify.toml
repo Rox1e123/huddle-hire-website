@@ -20,3 +20,17 @@
   to = "/"
   status = 404
   force = true
+
+# Baseline security headers. CSP is scoped to the site's only external
+# dependency (Google Fonts) plus Netlify's own injected badge script
+# (served same-origin from /.netlify/scripts/) — verify on the Deploy
+# Preview that fonts render and the Netlify badge still works before
+# merging, since CSP is the one header here that can visibly break something.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "DENY"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "geolocation=(), camera=(), microphone=()"
+    Content-Security-Policy = "default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; script-src 'self' https://app.netlify.com; connect-src 'self' https://app.netlify.com; frame-src https://app.netlify.com; base-uri 'self'; form-action 'self'; frame-ancestors 'self'"
