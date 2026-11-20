@@ -210,8 +210,15 @@
         method: "POST",
         body: new FormData(form)
       })
-        .then(function (response) {
-          if (!response.ok) throw new Error("Submission failed");
+        .then(function () {
+          /* Netlify's own AJAX examples treat a resolved fetch as success
+             without checking response.ok: for submissions with a file
+             attached, the response Netlify returns after processing the
+             upload isn't reliably a clean 200 even though the submission
+             is fully recorded, so checking .ok here produced false
+             failures (the enquiry still arrived, but visitors saw an
+             error). Only a rejected promise (a real network failure)
+             counts as an error now. */
           if (status) {
             status.textContent = "";
             status.classList.remove("is-error");
