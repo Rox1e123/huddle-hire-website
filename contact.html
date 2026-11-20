@@ -81,7 +81,8 @@
 
             <div class="contact-form-wrap" id="employers-form">
               <div class="contact-form-inner">
-                <form class="form" data-email-form data-email-to="hello@huddlehire.co.uk" data-email-subject="New hiring enquiry: Huddle Hire website" aria-labelledby="employers-form-heading">
+                <form class="form" name="employer-enquiry" method="POST" action="/" data-netlify="true" aria-labelledby="employers-form-heading">
+                  <input type="hidden" name="form-name" value="employer-enquiry">
                   <h3 id="employers-form-heading" class="visually-hidden">Discuss your hiring needs</h3>
                   <div class="field">
                     <label for="emp-name">Name</label>
@@ -115,7 +116,7 @@
                     <button class="btn btn--primary" type="submit"><span>Send Enquiry</span></button>
                   </div>
                   <div class="form-status" role="status" aria-live="polite"></div>
-                  <p class="form-note">Submitting opens your email app with this enquiry addressed to hello@huddlehire.co.uk. Nothing is sent until you hit send there.</p>
+                  <p class="form-note">Submitting sends this enquiry straight to hello@huddlehire.co.uk.</p>
                 </form>
               </div>
             </div>
@@ -130,7 +131,8 @@
 
             <div class="contact-form-wrap" id="candidates-form">
               <div class="contact-form-inner">
-                <form class="form" data-email-form data-email-to="hello@huddlehire.co.uk" data-email-subject="New candidate enquiry: Huddle Hire website" aria-labelledby="candidates-form-heading">
+                <form class="form" name="candidate-enquiry" method="POST" action="/" data-netlify="true" enctype="multipart/form-data" aria-labelledby="candidates-form-heading">
+                  <input type="hidden" name="form-name" value="candidate-enquiry">
                   <h3 id="candidates-form-heading" class="visually-hidden">Join our talent network</h3>
                   <div class="field">
                     <label for="cand-name">Name</label>
@@ -151,13 +153,9 @@
                     <input id="cand-role" name="current-role" type="text">
                   </div>
                   <div class="field">
-                    <label for="cand-linkedin">LinkedIn URL</label>
-                    <input id="cand-linkedin" name="linkedin" type="url" placeholder="https://www.linkedin.com/in/...">
-                  </div>
-                  <div class="field">
                     <label for="cand-cv">CV upload</label>
                     <input id="cand-cv" name="cv" type="file" accept=".pdf,.doc,.docx">
-                    <span class="hint">PDF or Word document. Submitting opens your email app; attach your CV there before sending, as it's never uploaded automatically.</span>
+                    <span class="hint">PDF or Word document, optional. It's sent with your enquiry.</span>
                   </div>
                   <div class="field">
                     <label for="cand-message">Message</label>
@@ -167,7 +165,7 @@
                     <button class="btn btn--primary" type="submit"><span>Send Enquiry</span></button>
                   </div>
                   <div class="form-status" role="status" aria-live="polite"></div>
-                  <p class="form-note">Submitting opens your email app with this enquiry addressed to hello@huddlehire.co.uk. Attach your CV there before sending.</p>
+                  <p class="form-note">Submitting sends this enquiry, and your CV if attached, straight to hello@huddlehire.co.uk.</p>
                 </form>
               </div>
             </div>
@@ -225,6 +223,14 @@
       </div>
     </div>
   </footer>
+
+  <div class="modal-overlay" id="form-success-modal" hidden>
+    <div class="modal" role="alertdialog" aria-modal="true" aria-labelledby="form-success-heading" aria-describedby="form-success-body">
+      <h3 id="form-success-heading">Message sent</h3>
+      <p id="form-success-body">Thanks for getting in touch. Your message has been sent and we'll be in touch soon.</p>
+      <button class="btn btn--primary modal-close" type="button"><span>Close</span></button>
+    </div>
+  </div>
 
   <script src="js/main.js"></script>
 </body>
