@@ -1,0 +1,22 @@
+# Keep internal project docs out of the publicly served site.
+# These files live in the repo for developer/handover reference, but
+# Netlify's publish directory is the repo root, so without these rules
+# they'd be reachable at huddlehire.co.uk/CLAUDE.md etc.
+
+[[redirects]]
+  from = "/CLAUDE.md"
+  to = "/"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/docs/*"
+  to = "/"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/README.md"
+  to = "/"
+  status = 404
+  force = true
