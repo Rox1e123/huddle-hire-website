@@ -130,17 +130,40 @@
     if (hashToggle) window.setTimeout(function () { hashToggle.click(); }, 50);
   }
 
-  /* Form handling: builds a pre-filled email to the address in data-email-to
-     and hands it to the visitor's own mail app via a mailto: link. Nothing is
-     uploaded or sent to any server or third party. The browser never makes a
-     network request for this. A CV file can't be attached automatically (mailto
-     doesn't support attachments), so the candidate form asks the visitor to
-     attach it themselves before sending. */
-  var forms = document.querySelectorAll("form[data-email-form]");
+  /* Success modal: shown after a form submits successfully */
+  var successModal = document.getElementById("form-success-modal");
+  var successClose = successModal && successModal.querySelector(".modal-close");
+  var lastFocused = null;
+
+  function openSuccessModal() {
+    if (!successModal) return;
+    lastFocused = document.activeElement;
+    successModal.hidden = false;
+    document.body.classList.add("modal-open");
+    if (successClose) successClose.focus();
+  }
+  function closeSuccessModal() {
+    if (!successModal) return;
+    successModal.hidden = true;
+    document.body.classList.remove("modal-open");
+    if (lastFocused && typeof lastFocused.focus === "function") lastFocused.focus();
+  }
+  if (successModal) {
+    if (successClose) successClose.addEventListener("click", closeSuccessModal);
+    successModal.addEventListener("click", function (e) {
+      if (e.target === successModal) closeSuccessModal();
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && !successModal.hidden) closeSuccessModal();
+    });
+  }
+
+  /* Form handling: submits directly to Netlify Forms (the enquiry reaches
+     hello@huddlehire.co.uk without opening the visitor's own email app, and
+     without any page redirect) and shows a confirmation popup on success. */
+  var forms = document.querySelectorAll("form[data-netlify]");
   forms.forEach(function (form) {
     var status = form.querySelector(".form-status");
-    var destination = form.getAttribute("data-email-to");
-    var subject = form.getAttribute("data-email-subject") || "Enquiry from the Huddle Hire website";
 
     form.addEventListener("submit", function (e) {
       e.preventDefault();
@@ -167,44 +190,43 @@
         }
       }
 
-      if (!status) return;
-
       if (!valid) {
-        status.textContent = "Please fill in the required fields correctly.";
-        status.classList.remove("is-success");
-        status.classList.add("is-error");
-        status.setAttribute("role", "alert");
+        if (status) {
+          status.textContent = "Please fill in the required fields correctly.";
+          status.classList.remove("is-success");
+          status.classList.add("is-error");
+          status.setAttribute("role", "alert");
+        }
         return;
       }
 
-      var cvField = form.querySelector('input[type="file"]');
-      var lines = [];
-      form.querySelectorAll("input[name], textarea[name]").forEach(function (field) {
-        if (field.type === "file") return;
-        var value = field.value.trim();
-        if (!value) return;
-        var label = form.querySelector('label[for="' + field.id + '"]');
-        lines.push((label ? label.textContent.trim() : field.name) + ": " + value);
-      });
-      if (cvField && cvField.files.length) {
-        lines.push("CV file (please attach before sending): " + cvField.files[0].name);
-      }
+      var submitBtn = form.querySelector('button[type="submit"]');
+      if (submitBtn) submitBtn.disabled = true;
 
-      var mailtoUrl =
-        "mailto:" + destination +
-        "?subject=" + encodeURIComponent(subject) +
-        "&body=" + encodeURIComponent(lines.join("\n"));
-
-      status.textContent =
-        "Your email app should now open with this enquiry addressed to " + destination + ". Just hit send there." +
-        (cvField ? " Remember to attach your CV before sending, as it can't be attached automatically." : "") +
-        " If nothing opens, please email us directly.";
-      status.classList.remove("is-error");
-      status.classList.add("is-success");
-      status.setAttribute("role", "status");
-
-      window.location.href = mailtoUrl;
-      form.reset();
+      fetch(form.getAttribute("action") || "/", {
+        method: "POST",
+        body: new FormData(form)
+      })
+        .then(function (response) {
+          if (!response.ok) throw new Error("Submission failed");
+          if (status) {
+            status.textContent = "";
+            status.classList.remove("is-error");
+          }
+          form.reset();
+          openSuccessModal();
+        })
+        .catch(function () {
+          if (status) {
+            status.textContent = "Something went wrong sending your message. Please email us directly at hello@huddlehire.co.uk.";
+            status.classList.remove("is-success");
+            status.classList.add("is-error");
+            status.setAttribute("role", "alert");
+          }
+        })
+        .finally(function () {
+          if (submitBtn) submitBtn.disabled = false;
+        });
     });
   });
 })();

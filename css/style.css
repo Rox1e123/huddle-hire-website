@@ -332,6 +332,17 @@ body.nav-open { overflow: hidden; }
 .form-status.is-error { display: block; border-color: #A13030; color: #A13030; background: rgba(161,48,48,.06); }
 .form-note { font-size: 13px; color: var(--hh-text-muted); }
 
+/* ===== Success modal ===== */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(43,29,31,.55);
+  display: flex; align-items: center; justify-content: center; padding: 20px; z-index: 100;
+}
+.modal-overlay[hidden] { display: none; }
+.modal { background: var(--hh-ivory); border: 1px solid var(--hh-line); max-width: 420px; width: 100%; padding: 36px; text-align: center; }
+.modal h3 { margin-top: 0; color: var(--hh-maroon); }
+.modal .btn { margin-top: 20px; }
+body.modal-open { overflow: hidden; }
+
 /* ===== Footer ===== */
 .site-footer { background: var(--hh-maroon-deep); color: var(--hh-text-on-dark); padding: 72px 0 32px; }
 .site-footer a { opacity: .85; transition: opacity .2s ease, color .2s ease; }
