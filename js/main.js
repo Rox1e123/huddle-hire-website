@@ -160,8 +160,11 @@
 
   /* Form handling: submits directly to Netlify Forms (the enquiry reaches
      hello@huddlehire.co.uk without opening the visitor's own email app, and
-     without any page redirect) and shows a confirmation popup on success. */
-  var forms = document.querySelectorAll("form[data-netlify]");
+     without any page redirect) and shows a confirmation popup on success.
+     Selected by data-ajax-form rather than data-netlify, since Netlify
+     strips the data-netlify attribute from the served HTML once a form is
+     registered, so it's gone by the time this script runs in production. */
+  var forms = document.querySelectorAll("form[data-ajax-form]");
   forms.forEach(function (form) {
     var status = form.querySelector(".form-status");
 
